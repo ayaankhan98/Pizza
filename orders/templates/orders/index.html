@@ -1,0 +1,242 @@
+{% extends "orders/base.html" %}
+{% load static %}
+
+{% block include %}
+<script src="{% static 'orders/index.js'  %}"></script>
+    <link rel="stylesheet" href="{% static 'orders/style.css' %}">
+{% endblock %}
+
+
+{% block title %}
+{% endblock %}
+
+
+{% block body %} 
+<div id="head-image">
+    <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80" width="100%">
+</div>
+<br><br>
+<div class="text-center text-danger m-2" id="top-heading"><h2>Welcome to Pinocchio's Pizza & Subs</h2></div>
+<br>
+<h5 class="text-center">We Have For You</h5>
+<div class="container">
+    <div id="menu">
+        
+            <div class="row">
+                <div class="col-sm" id="regular-pizza">
+                    <h3 class="text-center text-primary">Regular Pizza</h3><br>
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Item</th>
+                                <th>Price</th>
+                                <th>Size</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pizza in RegularPizzas %}
+                            <tr>
+                                <td>{{  pizza.item }}</td>
+                                <td>                         
+                                        Small - <b>${{ pizza.small }}</b>
+                                        Large - <b>${{ pizza.large }}</b>
+                                </td>    
+                                <td>
+                                    <select class="custom-select col-9" id="RegularPizza-size-{{ pizza.id }}">
+                                        <option value="none">Select Size</option>
+                                        <option value="small">Small</option>    
+                                        <option value="large">Large</option>
+                                    </select>
+                                </td> 
+                                <td>
+                                    <form class="form-inline">
+                                        {% csrf_token %}
+                                        <input type="text" class="form-group form-control col-4" id="RegularPizza-quantity-{{ pizza.id }}" placeholder="0">&nbsp;&nbsp;
+                                        <button class="btn btn-outline-dark btn-sm" id="add-cart-button" data-item="{{ pizza.item}}" data-type="RegularPizza" data-pid ="{{ pizza.id }}">Add to Cart</button>
+                                    </form>
+                                </td>                       
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm" id="silician-pizza">
+                    <h3 class="text-center text-primary">Silician Pizza</h3><br>
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Item</th>
+                                <th>Price</th>
+                                <th>Size</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pizza in SilicianPizzas %}
+                            <tr>
+                                <td>{{  pizza.item }}</td>
+                                <td>                         
+                                        Small - <b>${{ pizza.small }}</b>
+                                        Large - <b>${{ pizza.large }}</b>
+                                </td>    
+                                <td>
+                                    <select class="custom-select col-9" id="SilicianPizza-size-{{ pizza.id }}">
+                                        <option value="none">Select Size</option>
+                                        <option value="small">Small</option>    
+                                        <option value="large">Large</option>
+                                    </select>
+                                </td> 
+                                <td>
+                                    <form class="form-inline">
+                                        <input type="text" class="form-group form-control col-4" id="SilicianPizza-quantity-{{ pizza.id }}" placeholder="0">&nbsp;&nbsp;
+                                        <button class="btn btn-outline-dark btn-sm" id="add-cart-button" data-item="{{ pizza.item}}" data-type="SilicianPizza" data-pid ="{{ pizza.id }}">Add to Cart</button>
+                                    </form>
+                                </td>                       
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm" id="subs">
+                    <h3 class="text-center text-primary">Subs</h3><br>
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Item</th>
+                                <th>Price</th>
+                                <th>Size</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sub in Subs %}
+                            <tr>
+                                <td>{{  sub.item }}</td>
+                                <td>                         
+                                        Small - <b>${{ sub.small }}</b>
+                                        Large - <b>${{ sub.large }}</b>
+                                </td>    
+                                <td>
+                                    <select class="custom-select col-9" id="Subs-size-{{ sub.id }}">
+                                        <option value="none">Select Size</option>
+                                        <option value="small">Small</option>    
+                                        <option value="large">Large</option>
+                                    </select>
+                                </td> 
+                                <td>
+                                    <form class="form-inline">
+                                        <input type="text" class="form-group form-control col-4" id="Subs-quantity-{{ sub.id }}" placeholder="0">&nbsp;&nbsp;
+                                        <button class="btn btn-outline-dark btn-sm" id="add-cart-button" data-item="{{ sub.item }}" data-type="Subs" data-pid ="{{ sub.id }}">Add to Cart</button>
+                                    </form>
+                                </td>                       
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                    <div class="col-sm" id="pasta">
+                        <h3 class="text-center text-primary">Pasta</h3><br>
+                            <table class="table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for pasta in Pastas %}
+                                    <tr>
+                                        <td>{{  pasta.item }}</td>
+                                        <td>                         
+                                                Price - <b>${{ pasta.price }}</b>
+                                        </td>    
+                                        <td>
+                                            <form class="form-inline">
+                                                <input type="text" class="form-group form-control col-4" id="Pasta-quantity-{{ pasta.id }}" placeholder="0">&nbsp;&nbsp;
+                                                <button class="btn btn-outline-dark btn-sm" id="add-cart-button-2" data-item="{{ pasta.item }}" data-type="Pasta" data-pid ="{{ pasta.id }}">Add to Cart</button>
+                                            </form>
+                                        </td>                       
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                </div>
+                <div class="col-sm" id="salad">
+                    <h3 class="text-center text-primary">Salads</h3><br>
+                            <table class="table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for salad in Salads %}
+                                    <tr>
+                                        <td>{{  salad.item }}</td>
+                                        <td>                         
+                                                Price - <b>${{ salad.price }}</b>
+                                        </td>     
+                                        <td>
+                                            <form class="form-inline">
+                                                <input type="text" class="form-group form-control col-4" id="Salad-quantity-{{ salad.id }}" placeholder="0">&nbsp;&nbsp;
+                                                <button class="btn btn-outline-dark btn-sm" data-item="{{ salad.item }}" data-type="Salad" data-pid ="{{ salad.id }}" id="add-cart-button-2">Add to Cart</button>
+                                            </form>
+                                        </td>                       
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                    </div>
+            </div>
+            <div class="row">
+                <div class="col-sm" id="dinner-platter">
+                    <h3 class="text-center text-primary">Dinner Platters</h3><br>
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Item</th>
+                                <th>Price</th>
+                                <th>Size</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for dp in DinnerPlatters %}
+                            <tr>
+                                <td>{{  dp.item }}</td>
+                                <td>                         
+                                        Small - <b>${{ dp.small }}</b>
+                                        Large - <b>${{ dp.large }}</b>
+                                </td>    
+                                <td>
+                                    <select class="custom-select col-9" id="DinnerPlatter-size-{{ dp.id }}">
+                                        <option value="none">Select Size</option>
+                                        <option value="small">Small</option>    
+                                        <option value="large">Large</option>
+                                    </select>
+                                </td> 
+                                <td>
+                                    <form class="form-inline">
+                                        <input type="text" class="form-group form-control col-4" id="DinnerPlatter-quantity-{{ dp.id }}" placeholder="0">&nbsp;&nbsp;
+                                        <button class="btn btn-outline-dark btn-sm" id="add-cart-button" data-item="{{ dp.item}}" data-type="DinnerPlatter" data-pid ="{{ dp.id }}">Add to Cart</button>
+                                    </form>
+                                </td>                       
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>
+{% endblock %}
