@@ -1,2 +1,32 @@
 {% extends "orders/base.html" %}
 {% load static %}
+
+{% block body %}
+<div style="margin-top: 150px;"></div>
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            {% if status %}
+                {% if message %}
+                    {% for order in orders %}
+                        <h4 class="text-success"> {{ order.item }} </h4>
+                        <ul>
+                            <li>Size : {{ order.size }}</li>
+                            <li>Quantity :{{ order.quantity }}</li>
+                            <li><b>Payment : {{ order.payment }}</b></li>
+                        </ul>
+                    {% endfor %}
+                {% else %}
+                    <h2 class="text-primary text-center">Empty cart</h2>
+                {% endif %}
+            {% else %}
+                <h2 class="text-primary text-center">Login to View Cart</h2>
+            {% endif %}
+        <div class="text-center">
+            <button class="btn btn-primary">CheckOut</button>
+        </div>  
+        </div>
+    </div>
+</div>
+
+{% endblock %}

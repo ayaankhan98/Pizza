@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.db import IntegrityError
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect,HttpResponse, JsonResponse
 from .models import RegularPizza,SilicianPizza,Toppings,Salads,Pasta,DinnerPlatters,Extras,Subs,orders
@@ -84,14 +85,67 @@ def logout_view(request):
 
 def addcart(request):
     if request.user.is_authenticated:
-        item_class = request.POST["item_class"]
-        item_name = request.POST["item_name"]
-        size = request.POST.get('size',"None")
-        quantity = request.POST["quantity"]
-        new_order = orders(item=item_name,size=size,quantity=quantity,user=request.user.username)
+        try:
+            item_class = request.POST["item_class"]
+            item_name = request.POST["item_name"]
+            size = request.POST.get('size',"None")
+            quantity = float(request.POST["quantity"])
+        except MultiValueDictKeyError:
+            return JsonResponse({'status':"server error"})
+        if item_class == "RegularPizza":
+            if size == "small":
+                price = RegularPizza.objects.get(item=item_name).small
+                payment = price * quantity
+            if size == "large":
+                price = RegularPizza.objects.get(item=item_name).large
+                payment = price * quantity
+        if item_class == "SilicianPizza":
+            if size == "small":
+                price = SilicianPizza.objects.get(item=item_name).small
+                payment = price * quantity
+            if size == "large":
+                price = SilicianPizza.objects.get(item=item_name).large
+                payment = price * quantity
+        if item_class == "Subs":
+            if size == "small":
+                price = Subs.objects.get(item=item_name).small
+                payment = price * quantity
+            if size == "large":
+                price = Subs.objects.get(item=item_name).large
+                payment = price * quantity
+        if item_class == "Pasta":
+            payment = Pasta.objects.get(item=item_name).price * quantity
+        if item_class == "Salad":
+            payment = Salads.objects.get(item=item_name).price * quantity
+        if item_class == "DinnerPlatter":
+            if size == "small":
+                payment = DinnerPlatters.objects.get(item=item_name).small * quantity
+            if size == "large":
+                payment = DinnerPlatters.objects.get(item=item_name).large * quantity   
+        new_order = orders(item=item_name,size=size,quantity=quantity,user=request.user.username,payment=round(payment,3))
         new_order.save()
         return JsonResponse({'status':True})
     return JsonResponse({'status':False})
 
+
 def cart(request):
-    return render(request,"orders/cart.html")
+    if request.user.is_authenticated:
+        order = orders.objects.filter(user=request.user.username)
+        if not order:
+            context = {
+                'status':True,
+                'message':False,
+            }
+        else:
+            context = {
+                'status':True,
+                'message':True,
+                'orders': order,
+            }
+    else:
+        context = {
+            'status':False,
+            'message':'Please Login'
+        }
+    return render(request,"orders/cart.html",context)
+

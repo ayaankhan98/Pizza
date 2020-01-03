@@ -76,10 +76,11 @@ class DinnerPlatters(models.Model):
         return f"{self.item} Small-{self.small} Large-{self.large}"
 
 class orders(models.Model):
+    user = models.CharField(max_length=64)
     item = models.CharField(max_length=64)
     size = models.CharField(max_length=10,blank=True, null=True)
-    quantity = models.IntegerField()
-    user = models.CharField(max_length=64)
+    quantity = models.FloatField()
+    payment = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.user} have {self.item} , quantity{self.quantity}, size - {self.size}"
