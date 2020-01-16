@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             var data = new FormData()
             data.append('item_class',item_class)
+	    data.append('item_id',add_cart_button_id)
             data.append('item_name',item_name)
             data.append('size',size)
             data.append('quantity',quantity)
@@ -77,6 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             var data = new FormData()
             data.append('item_class',item_class)
+	    data.append('item_id',add_cart_button_id)
             data.append('item_name',item_name)
             data.append('quantity',quantity)
             request.send(data)

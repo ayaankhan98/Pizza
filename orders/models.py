@@ -77,9 +77,11 @@ class DinnerPlatters(models.Model):
 
 class orders(models.Model):
     user = models.CharField(max_length=64)
-    item = models.CharField(max_length=64)
+    item = models.CharField(max_length=64,blank=True)
+    item_id = models.IntegerField(blank=True,null=True)
+    item_class = models.CharField(max_length=64,blank=True,null=True)
     size = models.CharField(max_length=10,blank=True, null=True)
-    quantity = models.FloatField()
+    quantity = models.FloatField(blank=True,null=True)
     payment = models.FloatField(blank=True, null=True)
 
     def __str__(self):

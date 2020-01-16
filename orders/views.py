@@ -53,6 +53,7 @@ def auth(request):
         try:
             ## created a new user if passwords matched
             User.objects.create_user(username=username,first_name=first_name,last_name=last_name,email=email,password=password)
+            return render(request,"orders/login.html",{'message':'Successfully Created account Login Here'})
         except IntegrityError:
             ## else if a user with same username exist then return the user to the
             ## signup page again
@@ -88,6 +89,7 @@ def addcart(request):
         try:
             item_class = request.POST["item_class"]
             item_name = request.POST["item_name"]
+            item_id = request.POST["item_id"]
             size = request.POST.get('size',"None")
             quantity = float(request.POST["quantity"])
         except MultiValueDictKeyError:
@@ -122,7 +124,7 @@ def addcart(request):
                 payment = DinnerPlatters.objects.get(item=item_name).small * quantity
             if size == "large":
                 payment = DinnerPlatters.objects.get(item=item_name).large * quantity   
-        new_order = orders(item=item_name,size=size,quantity=quantity,user=request.user.username,payment=round(payment,3))
+        new_order = orders(item=item_name,item_id=item_id,item_class=item_class,size=size,quantity=quantity,user=request.user.username,payment=round(payment,3))
         new_order.save()
         return JsonResponse({'status':True})
     return JsonResponse({'status':False})
@@ -148,4 +150,10 @@ def cart(request):
             'message':'Please Login'
         }
     return render(request,"orders/cart.html",context)
+
+def deleteItem(request):
+    item_id = request.POST["item_id"]
+    item_class = request.POST["item_class"]
+    orders.objects.filter(item_class=itemclass, item_id=item_id).delete()
+    return HttpResponseRedirect(reverse('delItem'))
 
